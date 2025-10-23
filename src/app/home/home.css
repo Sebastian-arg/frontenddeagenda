@@ -1,0 +1,97 @@
+:host {
+  --primary-color: #752174;
+  --secondary-color: #F0ECC1;
+  --background-color: #581971;
+  --button-color: #752174;
+  --accent-color: #E4A0A6;
+  --background-color-start: #3B103A;
+  --background-color-end: #ff1b98;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--background-color-start), var(--background-color-end));
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.welcome-box {
+  position: relative;
+  padding: 2rem 4rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  width: fit-content;
+  min-width: 400px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--secondary-color);
+  animation: line-animation 4s linear infinite;
+}
+
+h1 {
+  font-size: 3rem;
+  color: white;
+  background-color: var(--accent-color);
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.buttons-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.login-button, .register-button {
+  background-color: #7a42a0!important; /* prioriza estes color de fondo sobre el estilo de boostrap */
+  color: white; /* Ejemplo */
+  padding: 15px 30px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none; /* Esto es importante para quitar el subrayado si es un <a> */
+  display: block; /* Para que ocupen su propio espacio */
+}
+
+/* Puedes añadir estilos específicos para el botón de registro si quieres */
+.register-button {
+  background-color: #5d2b78;
+}
+
+.login-button:hover, .register-button:hover {
+  transform: translateY(-3px);
+  background-color: var(--accent-color);
+}
+
+@keyframes line-animation {
+  0% {
+    clip-path: polygon(0% 0%, 2px 0%, 2px 2px, 0% 2px);
+  }
+  25% {
+    clip-path: polygon(100% 0%, 100% 2px, 0% 2px, 0% 0%);
+  }
+  50% {
+    clip-path: polygon(100% 0%, 100% 100%, 98% 100%, 98% 0%);
+  }
+  75% {
+    clip-path: polygon(100% 100%, 0% 100%, 0% 98%, 100% 98%);
+  }
+  100% {
+    clip-path: polygon(0% 100%, 0% 0%, 2px 0%, 2px 100%);
+  }
+}

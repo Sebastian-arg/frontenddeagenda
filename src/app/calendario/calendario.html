@@ -1,0 +1,79 @@
+<div class="toolbar">
+  <div class="left">
+    <button (click)="prev()">&larr;</button>
+    <button (click)="today()">Hoy</button>
+    <button (click)="next()">&rarr;</button>
+  </div>
+  <div class="center"><strong>{{ headerLabel() }}</strong></div>
+  <div class="right">
+    <button [class.active]="view() === 'month'" (click)="setView('month')">Mes</button>
+    <button [class.active]="view() === 'week'"  (click)="setView('week')">Semana</button>
+  </div>
+</div>
+
+<div *ngIf="view() === 'month'" class="month-grid">
+  <div class="day-name" *ngFor="let d of weekDayNames">{{ d }}</div>
+  <div *ngFor="let cell of monthCells()" class="day-cell" [class.other-month]="!cell.inCurrent" (dblclick)="openCreate(cell.dateISO)">
+    <div class="day-number">
+      <span [class.today]="cell.isToday">{{ cell.day }}</span>
+      <button class="add" (click)="$event.stopPropagation(); openCreate(cell.dateISO)">＋</button>
+    </div>
+    <div class="events">
+      <div class="event-pill" *ngFor="let ev of eventsByDay(cell.dateISO)"
+           [style.background]="ev.color || '#3b82f6'"
+           (click)="openEdit(ev)" title="{{ ev.title }} {{ timeLabel(ev) }}">
+        <span class="time" *ngIf="ev.start">{{ ev.start }}</span>
+        <span class="title">{{ ev.title }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="view() === 'week'" class="week-grid">
+  <div class="week-head">
+    <div class="hour-col"></div>
+    <div class="day-col" *ngFor="let d of weekDays()">
+      <div class="day-head">
+        <div class="day-title"><strong [class.today]="d.isToday">{{ d.label }}</strong></div>
+        <button class="mini" (click)="openCreate(d.dateISO)">＋</button>
+      </div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="hour-col">
+      <div class="hour" *ngFor="let h of hours">{{ h }}</div>
+    </div>
+    <div class="day-col" *ngFor="let d of weekDays()">
+      <div class="slot" *ngFor="let h of hours" (dblclick)="openCreate(d.dateISO, h+':00')"></div>
+      <div class="event-block" *ngFor="let ev of eventsByDay(d.dateISO)"
+           [style.top.%]="blockTop(ev)" [style.height.%]="blockHeight(ev)"
+           [style.background]="ev.color || '#22c55e'" (click)="openEdit(ev)">
+        <div class="ev-title">{{ ev.title }}</div>
+        <div class="ev-time">{{ timeLabel(ev) }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" *ngIf="modalOpen()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ editing() ? 'Editar evento' : 'Nuevo evento' }}</h3>
+    <form (ngSubmit)="saveModal()">
+      <div class="grid2">
+        <label>Fecha <input type="date" [(ngModel)]="form.date" name="date" required /></label>
+        <label>Título <input type="text" [(ngModel)]="form.title" name="title" required /></label>
+      </div>
+      <div class="grid2">
+        <label>Inicio <input type="time" [(ngModel)]="form.start" name="start" /></label>
+        <label>Fin <input type="time" [(ngModel)]="form.end" name="end" /></label>
+      </div>
+      <label>Color <input type="color" [(ngModel)]="form.color" name="color" /></label>
+      <label>Descripción <textarea rows="3" [(ngModel)]="form.description" name="description"></textarea></label>
+      <div class="actions">
+        <button type="submit">{{ editing() ? 'Guardar cambios' : 'Crear' }}</button>
+        <button type="button" class="secondary" (click)="closeModal()">Cancelar</button>
+        <button *ngIf="editing()" type="button" class="danger" (click)="remove()">Eliminar</button>
+      </div>
+    </form>
+  </div>
+</div>
