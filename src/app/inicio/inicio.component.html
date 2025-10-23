@@ -1,0 +1,92 @@
+<!-- Barra de navegación superior fija -->
+<nav class="top-navbar">
+    <div class="nav-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+        Agenda Personal
+    </div>
+    <div class="nav-controls">
+        <img 
+            src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/16cd0cf8-dc58-4479-9251-8140df206a3c.png" 
+            alt="Foto de perfil" 
+            class="profile-image">
+        <button class="logout-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+</nav>
+
+<div class="main-container">
+  <!-- Barra lateral izquierda -->
+  <div class="sidebar">
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5v15"/></svg>
+      <span>Mi Agenda</span>
+    </div>
+    <nav class="nav-menu">
+      <div class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Calendario</span>
+      </div>
+      <div class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+        <span>Eventos</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Calendario central -->
+  <div class="content-area">
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <h2 class="current-month">{{ currentMonth | date:'LLLL y' }}</h2>
+        <div class="calendar-nav">
+          <button (click)="changeMonth(-1)">&lt;</button>
+          <button class="today-btn" (click)="goToToday()">Hoy</button>
+          <button (click)="changeMonth(1)">&gt;</button>
+        </div>
+      </div>
+      <div class="calendar-grid">
+        <div class="day-header" *ngFor="let day of weekDays">{{ day }}</div>
+        <div 
+          *ngFor="let day of calendarDays" 
+          class="calendar-day" 
+          [ngClass]="{
+            'other-month': !day.isCurrentMonth,
+            'today': day.isToday,
+            'has-event': day.hasEvent
+          }"
+          (click)="selectDay(day)"
+        >
+          <span class="day-number">{{ day.date.getDate() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra lateral derecha - Eventos -->
+  <div class="events-sidebar">
+    <h3>Esta Semana</h3>
+    <div *ngIf="weekEvents.length > 0; else noEvents">
+      <div *ngFor="let event of weekEvents">
+        <h4 class="font-semibold mt-4 mb-2 text-blue-600">{{ event.date | date:'eeee, d MMMM' }}</h4>
+        <div class="event-card">
+            <div class="event-time">{{ event.date | date:'HH:mm' }}</div>
+            <div class="event-title">{{ event.title }}</div>
+            <div class="event-desc">{{ event.description }}</div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noEvents>
+        <div class="no-events">
+            <p>No hay eventos programados para esta semana</p>
+        </div>
+    </ng-template>
+
+    <button class="add-event-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+        <span>Nuevo Evento</span>
+    </button>
+  </div>
+
+</div>
